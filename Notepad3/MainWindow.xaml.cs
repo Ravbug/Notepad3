@@ -20,95 +20,15 @@ namespace Notepad3
     /// </summary>
     public partial class MainWindow : Window
     {
-        //enum for text editing mode
-        enum TextMode{RTF,TXT}
-        static TextMode mode = TextMode.TXT;
+        CommonEditor editor;
         public MainWindow()
         {
             InitializeComponent();
-            //by default loads the RTF view
-            setTextMode(TextMode.RTF);
+            //configure the view
+            editor = new CommonEditor(rtfView,txtView);
         }
 
-        /// <summary>
-        /// Returns the current active text editing view (RTF or TXT)
-        /// </summary>
-        /// <returns>System.Windows.Controls.Control current view</returns>
-        private System.Windows.Controls.Control getCurrentEditor()
-        {
-            return getControlForEnum(mode);
-        }
-        
-        /// <summary>
-        /// Returns the editing control for a passed Enum
-        /// </summary>
-        /// <param name="m"></param>
-        /// <returns></returns>
-        private System.Windows.Controls.Control getControlForEnum(TextMode m)
-        {
-            if (m == TextMode.RTF)
-            {
-                return rtfView;
-            }
-            else
-            {
-                return txtView;
-            }
-        }
-
-        /// <summary>
-        /// Toggles between RTF editing and TXT editing
-        /// </summary>
-        private void toggleTextMode()
-        {
-            TextMode mTemp = (mode == TextMode.RTF) ? TextMode.TXT : TextMode.RTF;
-            setTextMode(mTemp);
-        }
-
-        /// <summary>
-        /// Switches the current editing mode between TXT and RTF
-        /// </summary>
-        /// <param name="newMode">Enum representing the new mode to switch to</param>
-        private void setTextMode(TextMode newMode)
-        {
-            if (newMode == mode) { return; }
-            //prep the controls for switch
-            Control old = getCurrentEditor();
-            Control current;
-            if (newMode == TextMode.RTF)
-            {
-                //load the string into the RTF view
-                rtfView.Document.Blocks.Clear();
-                rtfView.Document.Blocks.Add(new Paragraph(new Run(txtView.Text)));
-                current = rtfView;
-                //clear the old text
-                txtView.Clear();
-            }
-            else
-            {
-                //warn the user with a popup dialog
-                MessageBoxResult res = MessageBox.Show("Converting from rich text to plain text will lose all formatting.\n\nAre you sure you want to convert your document to plain text?", "Potential data loss", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (res)
-                {
-                    case MessageBoxResult.No:
-                        return;
-                }
-                //load the text
-                string richText = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd).Text;
-                txtView.Text = richText;
-                current = txtView;
-
-                //clear the old text
-                rtfView.Document.Blocks.Clear();
-            }
-            //switch the views
-            current.IsEnabled = true;
-            current.Visibility = System.Windows.Visibility.Visible;
-
-            old.IsEnabled = false;
-            old.Visibility = System.Windows.Visibility.Hidden;
-            mode = newMode;
-        }
+       
 
         //================================UI click handlers==============================
 
@@ -116,7 +36,7 @@ namespace Notepad3
         {
             if (sender == toggleEdit)
             {
-                toggleTextMode();
+                editor.ToggleTextMode();
             }
         }
     }
