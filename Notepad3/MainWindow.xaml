@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Notepad3"
         mc:Ignorable="d"
-        Title="Untitled - Notepad3" Height="450" Width="800">
+        Title="Untitled - Notepad3" Height="450" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -33,10 +33,14 @@
                     <MenuItem Header="Search..." />
                     <MenuItem Header="Find" />
                 </MenuItem>
+                <MenuItem Header="Format">
+                    <MenuItem x:Name="toggleEdit" Header="Toggle RTF/TXT editing mode" Click="MenuItem_Click"/>
+                </MenuItem>
             </Menu>
+            
         </DockPanel>
         <!-- Editing panels: RTF view and plain text view for switching-->
-        <RichTextBox Grid.Row="1" Visibility="Hidden" IsEnabled="False" />
-        <TextBox Grid.Row="1" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Visibility="Visible" IsEnabled="True" />
+        <RichTextBox x:Name="rtfView" Grid.Row="1" Visibility="Hidden" IsEnabled="False" />
+        <TextBox x:Name="txtView" Grid.Row="1" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Visibility="Visible" IsEnabled="True" />
     </Grid>
 </Window>
