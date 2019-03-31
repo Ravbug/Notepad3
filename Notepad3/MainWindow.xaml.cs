@@ -87,7 +87,12 @@ namespace Notepad3
             else
             {
                 //warn the user with a popup dialog
-
+                MessageBoxResult res = MessageBox.Show("Converting from rich text to plain text will lose all formatting.\n\nAre you sure you want to convert your document to plain text?", "Potential data loss", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                switch (res)
+                {
+                    case MessageBoxResult.No:
+                        return;
+                }
                 //load the text
                 string richText = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd).Text;
                 txtView.Text = richText;
