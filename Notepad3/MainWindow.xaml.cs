@@ -81,6 +81,8 @@ namespace Notepad3
                 rtfView.Document.Blocks.Clear();
                 rtfView.Document.Blocks.Add(new Paragraph(new Run(txtView.Text)));
                 current = rtfView;
+                //clear the old text
+                txtView.Clear();
             }
             else
             {
@@ -90,6 +92,9 @@ namespace Notepad3
                 string richText = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd).Text;
                 txtView.Text = richText;
                 current = txtView;
+
+                //clear the old text
+                rtfView.Document.Blocks.Clear();
             }
             //switch the views
             current.IsEnabled = true;
