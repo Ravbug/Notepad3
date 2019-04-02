@@ -26,9 +26,7 @@ namespace Notepad3
             InitializeComponent();
             //configure the view
             editor = new CommonEditor(rtfView,txtView);
-        }
-
-       
+        }   
 
         //================================UI click handlers==============================
 

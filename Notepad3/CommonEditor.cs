@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,10 @@ namespace Notepad3
         //enum for text editing mode
         public enum TextMode { RTF, TXT }
         public TextMode mode { get; private set; }
+
+        //document and save status
+        private bool isSaved = false;
+        public FileInfo document { get; private set; }
 
         //the two editng views
         RichTextBox rtfView;
@@ -155,5 +161,87 @@ namespace Notepad3
                     break;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void NewFile()
+        {
+            if (GetText().Length > 0 || !isSaved)
+            {
+                MessageBoxResult res = MessageBox.Show("Save changes before closing?", "Unsaved document", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (res == MessageBoxResult.Yes)
+                {
+                   bool success = SaveFile();
+                   if (!success)
+                    {
+                        return;
+                    }
+                }
+            }
+            SetText("");
+            isSaved = false;
+            document = null;
+        }
+
+        /// <summary>
+        /// Writes the file to disk
+        /// </summary>
+        /// <returns>True if saved successfully, false if failed</returns>
+        public bool SaveFile()
+        {
+            //if no FileInfo set, prompt for one (re-prompt if invalid unless cancel
+            if (document == null)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    document = new FileInfo(saveFileDialog.FileName);
+                }
+            }
+
+            //attempt to write file, and return if it fails
+            try
+            {
+                if (mode == TextMode.RTF)
+                {
+                    TextRange t = new TextRange(rtfView.Document.ContentStart,
+                                    rtfView.Document.ContentEnd);
+                    FileStream file = new FileStream(document.FullName, FileMode.Create);
+                    t.Save(file, System.Windows.DataFormats.Rtf);
+                    file.Close(); 
+                }
+                else
+                {
+                    File.WriteAllText(document.FullName, txtView.Text);
+                }
+            }
+            catch(Exception)
+            {
+
+            }
+
+            return false;
+        }
+
+        private FileInfo FileInfo(string fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadFile(string path)
+        {
+            if (mode == TextMode.RTF)
+            {
+                var documentBytes = Encoding.UTF8.GetBytes(path);
+                using (var reader = new MemoryStream(documentBytes))
+                {
+                    reader.Position = 0;
+                    rtfView.SelectAll();
+                    rtfView.Selection.Load(reader, DataFormats.Rtf);
+                }
+            }
+        }
+
     }
 }
