@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace Notepad3
 {
@@ -18,7 +19,7 @@ namespace Notepad3
         public TextMode mode { get; private set; }
 
         //document and save status
-        private bool isSaved = false;
+        public bool isSaved { get; private set; } = true;
         public FileInfo document { get; private set; }
 
         //the two editng views
@@ -27,6 +28,15 @@ namespace Notepad3
 
         //exterior classes interact with this control
         public Control CurrentEditor { get; private set; }
+
+        /// <summary>
+        /// Update the document save state (mark dirty or clean)
+        /// </summary>
+        /// <param name="state">new save state</param>
+        public void SetSavedState(bool state)
+        {
+            isSaved = state;
+        }
 
         /// <summary>
         /// Constructs a CommonEditor object
@@ -63,7 +73,7 @@ namespace Notepad3
         /// Switches the current editing mode between TXT and RTF
         /// </summary>
         /// <param name="newMode">Enum representing the new mode to switch to</param>
-        private void setTextMode(TextMode newMode)
+        private void setTextMode(TextMode newMode, bool prompt = true)
         {
             if (newMode == mode) { return; }
             //prep the controls for switch
@@ -81,11 +91,14 @@ namespace Notepad3
             else
             {
                 //warn the user with a popup dialog
-                MessageBoxResult res = MessageBox.Show("Converting from rich text to plain text will lose all formatting.\n\nAre you sure you want to convert your document to plain text?", "Potential data loss", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                switch (res)
+                if (prompt)
                 {
-                    case MessageBoxResult.No:
-                        return;
+                    MessageBoxResult res = MessageBox.Show("Converting from rich text to plain text will lose all formatting.\n\nAre you sure you want to convert your document to plain text?", "Potential data loss", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    switch (res)
+                    {
+                        case MessageBoxResult.No:
+                            return;
+                    }
                 }
                 //load the text
                 string richText = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd).Text;
@@ -104,6 +117,8 @@ namespace Notepad3
 
             CurrentEditor = current;
             mode = newMode;
+            // unload file document object (on save, will ask to re-save)
+            document = null;
         }
        
         /// <summary>
@@ -218,9 +233,83 @@ namespace Notepad3
             }
             catch(Exception)
             {
-
+                return false;
             }
 
+            isSaved = true;
+            return true;
+        }
+
+        /// <summary>
+        /// Save the file as a copy under a new name.
+        /// </summary>
+        /// <returns>True if the save was successful, false otherwise</returns>
+        public bool SaveFileAs()
+        {
+            document = null;
+            return SaveFile();
+        }
+
+        /// <summary>
+        /// Closes a document
+        /// </summary>
+        /// <returns>True if the document was closed, false otherwise</returns>
+        public bool Close()
+        {
+            if (!isSaved)
+            {
+                MessageBoxResult result = MessageBox.Show("Save changes before closing?","Closing document",MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        if (SaveFile())
+                            return true;
+                        return false;
+                    case MessageBoxResult.No:
+                        return true;
+                    case MessageBoxResult.Cancel:
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Prompts the user for a file, then opens it
+        /// </summary>
+        /// <returns>True if file was opened, false if not</returns>
+        public bool OpenFile()
+        {
+            if (Close())
+            {
+                System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+                openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    FileInfo file = new FileInfo(openFileDialog.FileName);
+                    if (file.Extension.ToLower() == ".rtf")
+                    {
+                        if (mode != TextMode.RTF) { setTextMode(TextMode.RTF,false); }
+                        TextRange range;
+                        FileStream fStream;
+                        range = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd);
+                        fStream = new FileStream(openFileDialog.FileName, FileMode.OpenOrCreate);
+                        range.Load(fStream, DataFormats.XamlPackage);
+                        fStream.Close();
+                    }
+                    else
+                    {
+                        if (mode != TextMode.TXT) { setTextMode(TextMode.TXT,false); }
+                        txtView.Text = File.ReadAllText(openFileDialog.FileName);
+                        isSaved = true;
+                    }
+                    document = file;
+                    return true;
+                }
+                return false;
+            }
             return false;
         }
 
