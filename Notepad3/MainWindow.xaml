@@ -21,7 +21,8 @@
         <DockPanel Grid.ColumnSpan="2" Margin="0,0,0.333,0">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="New" x:Name="NewFile" Click="MenuItem_Click" />
+                    <MenuItem Header="New Document" x:Name="NewFile" Click="MenuItem_Click" />
+                    <MenuItem Header="New Window" x:Name="NewWindow" Click="MenuItem_Click" />
                     <MenuItem Header="Open..." x:Name="OpenFile" Click="MenuItem_Click"/>
                     <MenuItem Header="Save" x:Name="SaveFile" Click="MenuItem_Click"/>
                     <MenuItem Header="Save As..." x:Name="SaveFileAs" Click="MenuItem_Click"/>
@@ -39,13 +40,14 @@
                     <MenuItem Header="Find" />
                 </MenuItem>
                 <MenuItem Header="Format">
+                    <MenuItem x:Name="wordWrap" Click="MenuItem_Click" Header="Word Wrap" IsCheckable="True" IsChecked="True"/>
                     <MenuItem x:Name="toggleEdit" Header="Toggle RTF/TXT editing mode" Click="MenuItem_Click"/>
                 </MenuItem>
             </Menu>
 
         </DockPanel>
         <!-- Editing panels: RTF view and plain text view for switching-->
-        <RichTextBox x:Name="rtfView" KeyDown="keyhandler" Grid.Row="1" Visibility="Hidden" IsEnabled="False" Grid.ColumnSpan="2" Margin="0,0,-0.667,19.667" Grid.RowSpan="2" />
+        <RichTextBox x:Name="rtfView" KeyDown="keyhandler" Grid.Row="1" Visibility="Hidden" IsEnabled="False" Grid.ColumnSpan="2" Margin="0,0,-0.667,19.667" Grid.RowSpan="2" HorizontalScrollBarVisibility="Hidden" />
         <TextBox x:Name="txtView" KeyDown="keyhandler" Grid.Row="1" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Visibility="Visible" IsEnabled="True" Grid.ColumnSpan="2" Margin="0,0,-0.667,19.667" Grid.RowSpan="2" FontFamily="Lucida Console" />
     </Grid>
 </Window>

@@ -73,6 +73,10 @@ namespace Notepad3
                     SetTitlebar(editor.document.Name,editor.isSaved);
                 }
             }
+            else if(sender == wordWrap){
+                txtView.TextWrapping = wordWrap.IsChecked? TextWrapping.Wrap : TextWrapping.NoWrap;
+                txtView.HorizontalScrollBarVisibility = wordWrap.IsChecked ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Visible;
+            }
             else if (sender == Exit)
             {
                 Close();
