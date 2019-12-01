@@ -21,12 +21,13 @@ namespace Notepad3
     public partial class MainWindow : Window
     {
         CommonEditor editor;
+        const string untitled_doc = "Untitled";
         public MainWindow()
         {
             InitializeComponent();
             //configure the view
             editor = new CommonEditor(rtfView,txtView);
-            SetTitlebar("Untitled", editor.isSaved);
+            SetTitlebar(untitled_doc, editor.isSaved);
         }   
 
         //================================UI click handlers==============================
@@ -40,6 +41,7 @@ namespace Notepad3
             else if (sender == NewFile)
             {
                 editor.NewFile();
+                SetTitlebar("Untitled", editor.isSaved);
             }
             else if (sender == SaveFile)
             {
@@ -49,7 +51,7 @@ namespace Notepad3
                 }
                 else
                 {
-                    SetTitlebar(editor.document.Name, false);
+                    SetTitlebar(editor.document.Name, editor.isSaved);
                 }
                 
             }
@@ -61,23 +63,33 @@ namespace Notepad3
                 }
                 else
                 {
-                    SetTitlebar(editor.document.Name, false);
+                    SetTitlebar(editor.document.Name, editor.isSaved);
                 }
             }
             else if (sender == OpenFile)
             {
                 if (editor.OpenFile())
                 {
-                    SetTitlebar(editor.document.Name,false);
+                    SetTitlebar(editor.document.Name,editor.isSaved);
                 }
+            }
+            else if (sender == Exit)
+            {
+                Close();
             }
         }
 
+        /// <summary>
+        /// Called when a key is pressed in either text view
+        /// </summary>
+        /// <param name="sender">Object that raised event</param>
+        /// <param name="e">Event arguments</param>
         private void keyhandler(object sender, RoutedEventArgs e)
         {
-            if (editor.isSaved != false)
+            if (editor.isSaved)
             {
-                SetTitlebar(editor.document.Name,true);
+                string name = editor.document == null ? untitled_doc : editor.document.Name;
+                SetTitlebar(name,false);
             }
             editor.SetSavedState(false);
         } 
@@ -89,7 +101,15 @@ namespace Notepad3
         /// <param name="isModified">True if the document is "dirty" (modified but not saved)</param>
         private void SetTitlebar(string doc, bool isModified)
         {
-            this.Title = doc + (isModified ? "*" : "") + " - Notepad3";
+            this.Title = doc + (isModified ? "" : "*") + " - Notepad3";
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!editor.Close())
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

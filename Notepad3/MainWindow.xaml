@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Notepad3"
         mc:Ignorable="d"
-        Height="450" Width="450">
+        Height="450" Width="450"
+        Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="8*"/>
@@ -26,7 +27,7 @@
                     <MenuItem Header="Save As..." x:Name="SaveFileAs" Click="MenuItem_Click"/>
                     <MenuItem Header="Page Setup" x:Name="PageSetup" />
                     <MenuItem Header="Print..." x:Name="Print" />
-                    <MenuItem Header="Exit" x:Name="Exit" />
+                    <MenuItem Header="Exit" x:Name="Exit" Click="MenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
                     <MenuItem Header="Undo"/>

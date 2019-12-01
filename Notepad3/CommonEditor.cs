@@ -182,7 +182,7 @@ namespace Notepad3
         /// </summary>
         public void NewFile()
         {
-            if (GetText().Length > 0 || !isSaved)
+            if (!isSaved)
             {
                 MessageBoxResult res = MessageBox.Show("Save changes before closing?", "Unsaved document", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)
@@ -195,7 +195,7 @@ namespace Notepad3
                 }
             }
             SetText("");
-            isSaved = false;
+            isSaved = true;
             document = null;
         }
 
