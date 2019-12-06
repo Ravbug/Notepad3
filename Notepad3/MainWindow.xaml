@@ -43,11 +43,46 @@
                     <MenuItem x:Name="wordWrap" Click="MenuItem_Click" Header="Word Wrap" IsCheckable="True" IsChecked="True"/>
                     <MenuItem x:Name="toggleEdit" Header="Toggle RTF/TXT editing mode" Click="MenuItem_Click"/>
                 </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Click="OnAbout" Header="About Notepad3"/>
+                    <MenuItem Header="Check for Updates" x:Name="Update" Click="MenuItem_Click"/>
+                    <MenuItem Header="GitHub Repository" x:Name="Repository" Click="MenuItem_Click"/>
+                </MenuItem>
             </Menu>
 
         </DockPanel>
+        
         <!-- Editing panels: RTF view and plain text view for switching-->
-        <RichTextBox x:Name="rtfView" KeyDown="keyhandler" Grid.Row="1" Visibility="Hidden" IsEnabled="False" Grid.ColumnSpan="2" Margin="0,0,-0.667,19.667" Grid.RowSpan="2" HorizontalScrollBarVisibility="Hidden" />
-        <TextBox x:Name="txtView" KeyDown="keyhandler" Grid.Row="1" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Visibility="Visible" IsEnabled="True" Grid.ColumnSpan="2" Margin="0,0,-0.667,19.667" Grid.RowSpan="2" FontFamily="Lucida Console" />
+        <DockPanel Grid.ColumnSpan="2" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ToolBarTray Grid.Row="0">
+                    <ToolBar>
+                        <Button Content="Toolbar Button"/>
+                        <Label Content="Font"/>
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True">Font 1</ComboBoxItem>
+                            <ComboBoxItem>Font 2</ComboBoxItem>
+                        </ComboBox>
+                    </ToolBar>
+                </ToolBarTray>
+                <RichTextBox x:Name="rtfView" Grid.Row="1" TextChanged="keyhandler" IsEnabled="False" HorizontalScrollBarVisibility="Hidden" />
+            </Grid>
+        </DockPanel>
+        <DockPanel Grid.ColumnSpan="2" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ToolBar Grid.Row="0">
+                    <Button Content="Plaintext Button"/>
+                </ToolBar>
+                <TextBox Grid.Row="1" x:Name="txtView" TextChanged="keyhandler" TextWrapping="Wrap" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" IsEnabled="True"  FontFamily="Consolas" />
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>

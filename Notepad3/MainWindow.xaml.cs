@@ -112,6 +112,8 @@ namespace Notepad3
             else if (sender == Cut) { editor.Cut(); }
             else if (sender == Copy) { editor.Copy(); }
             else if (sender == Paste) { editor.Paste(); }
+            else if (sender == Update) { System.Diagnostics.Process.Start("https://github.com/Ravbug/Notepad3/releases"); }
+            else if (sender == Repository) { System.Diagnostics.Process.Start("https://github.com/ravbug/notepad3"); }
         }
 
         /// <summary>
@@ -145,6 +147,11 @@ namespace Notepad3
             {
                 e.Cancel = true;
             }
+        }
+
+        private void OnAbout(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Version: 0.0.1a\nDeveloper: Ravbug\n\nCopyright © 2018-" + DateTime.Now.Year.ToString(), "About Notepad3",MessageBoxButton.OK,MessageBoxImage.Information);
         }
     }
 }

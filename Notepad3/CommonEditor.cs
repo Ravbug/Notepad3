@@ -54,17 +54,17 @@ namespace Notepad3
             //configure the views
             if (defaultState == TextMode.RTF)
             {
-                rtfView.Visibility = System.Windows.Visibility.Visible;
+                (rtfView.Parent as Panel).Visibility = System.Windows.Visibility.Visible;
                 rtfView.IsEnabled = true;
-                txtView.Visibility = System.Windows.Visibility.Hidden;
+                (txtView.Parent as Panel).Visibility = System.Windows.Visibility.Hidden;
                 txtView.IsEnabled = false;
                 CurrentEditor = rtfView;
             }
             else
             {
-                rtfView.Visibility = System.Windows.Visibility.Hidden;
+                (rtfView.Parent as Panel).Visibility = System.Windows.Visibility.Hidden;
                 rtfView.IsEnabled = false;
-                txtView.Visibility = System.Windows.Visibility.Visible;
+                (txtView.Parent as Panel).Visibility = System.Windows.Visibility.Visible;
                 txtView.IsEnabled = true;
                 CurrentEditor = txtView;
             }
@@ -111,10 +111,10 @@ namespace Notepad3
             }
             //switch the views
             current.IsEnabled = true;
-            current.Visibility = System.Windows.Visibility.Visible;
+            (current.Parent as Panel).Visibility = System.Windows.Visibility.Visible;
 
             old.IsEnabled = false;
-            old.Visibility = System.Windows.Visibility.Hidden;
+            (old.Parent as Panel).Visibility = System.Windows.Visibility.Hidden;
 
             CurrentEditor = current;
             mode = newMode;
