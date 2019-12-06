@@ -31,11 +31,11 @@
                     <MenuItem Header="Exit" x:Name="Exit" Click="MenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="Undo"/>
-                    <MenuItem Header="Cut"/>
-                    <MenuItem Header="Copy"/>
-                    <MenuItem Header="Paste"/>
-                    <MenuItem Header="Delete" />
+                    <MenuItem Header="Undo" x:Name="Undo" Click="MenuItem_Click"/>
+                    <MenuItem Header="Redo" x:Name="Redo" Click="MenuItem_Click"/>
+                    <MenuItem Header="Cut" x:Name="Cut" Click="MenuItem_Click"/>
+                    <MenuItem Header="Copy" x:Name="Copy" Click="MenuItem_Click"/>
+                    <MenuItem Header="Paste" x:Name="Paste" Click="MenuItem_Click"/>
                     <MenuItem Header="Search..." />
                     <MenuItem Header="Find" />
                 </MenuItem>

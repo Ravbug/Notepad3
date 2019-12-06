@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Controls.Primitives;
 using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace Notepad3
@@ -27,7 +28,7 @@ namespace Notepad3
         TextBox txtView;
 
         //exterior classes interact with this control
-        public Control CurrentEditor { get; private set; }
+        public TextBoxBase CurrentEditor { get; private set; }
 
         /// <summary>
         /// Update the document save state (mark dirty or clean)
@@ -77,8 +78,8 @@ namespace Notepad3
         {
             if (newMode == mode) { return; }
             //prep the controls for switch
-            Control old = CurrentEditor;
-            Control current;
+            TextBoxBase old = CurrentEditor;
+            TextBoxBase current;
             if (newMode == TextMode.RTF)
             {
                 //load the string into the RTF view
@@ -292,12 +293,7 @@ namespace Notepad3
                     if (file.Extension.ToLower() == ".rtf")
                     {
                         if (mode != TextMode.RTF) { setTextMode(TextMode.RTF,false); }
-                        TextRange range;
-                        FileStream fStream;
-                        range = new TextRange(rtfView.Document.ContentStart, rtfView.Document.ContentEnd);
-                        fStream = new FileStream(openFileDialog.FileName, FileMode.OpenOrCreate);
-                        range.Load(fStream, DataFormats.XamlPackage);
-                        fStream.Close();
+                        LoadRTF(openFileDialog.FileName.ToString());
                     }
                     else
                     {
@@ -313,23 +309,81 @@ namespace Notepad3
             return false;
         }
 
-        private FileInfo FileInfo(string fileName)
+        /// <summary>
+        /// Invokes the Undo command on the appropriate view
+        /// </summary>
+        /// <returns>true if able to undo, false if not</returns>
+        public bool Undo()
         {
-            throw new NotImplementedException();
+            bool canUndo = CurrentEditor.CanUndo;
+            if (canUndo)
+            {
+                CurrentEditor.Undo();
+            }
+            return canUndo;
+        }
+        
+        /// <summary>
+        /// Invokes the Redo command on the appropriate view
+        /// </summary>
+        /// <returns>true if able to redo, false if not</returns>
+        public bool Redo()
+        {
+            bool canRedo = CurrentEditor.CanRedo;
+            if (canRedo)
+            {
+                CurrentEditor.Redo();
+            }
+            return canRedo;
         }
 
-        public void LoadFile(string path)
+        /// <summary>
+        /// Copies from the current editor
+        /// </summary>
+        public void Copy()
         {
-            if (mode == TextMode.RTF)
+            bool c = (mode == TextMode.TXT && txtView.SelectedText.Length > 0) || (mode == TextMode.RTF && !rtfView.Selection.IsEmpty);
+            if (c)
             {
-                var documentBytes = Encoding.UTF8.GetBytes(path);
-                using (var reader = new MemoryStream(documentBytes))
-                {
-                    reader.Position = 0;
-                    rtfView.SelectAll();
-                    rtfView.Selection.Load(reader, DataFormats.Rtf);
-                }
+                CurrentEditor.Copy();
             }
+        }
+
+        /// <summary>
+        /// Cuts from the current editor
+        /// </summary>
+        public void Cut()
+        {
+            bool c = (mode == TextMode.TXT && txtView.SelectedText.Length > 0) || (mode == TextMode.RTF && !rtfView.Selection.IsEmpty);
+            if (c)
+            {
+                CurrentEditor.Cut();
+            }
+        }
+
+        /// <summary>
+        /// Pastes into the current editor
+        /// </summary>
+        public void Paste()
+        {
+            CurrentEditor.Paste();
+        }
+
+        /// <summary>
+        /// Loads an RTF file from path
+        /// </summary>
+        /// <param name="path">Fully-qualified path to the file</param>
+        public void LoadRTF(string path)
+        {
+           
+            var documentBytes = Encoding.UTF8.GetBytes(path);
+            using (var reader = new MemoryStream(documentBytes))
+            {
+                reader.Position = 0;
+                rtfView.SelectAll();
+                rtfView.Selection.Load(reader, DataFormats.Rtf);
+            }
+            
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace Notepad3
             //configure the view
             editor = new CommonEditor(rtfView,txtView);
             SetTitlebar(untitled_doc, editor.isSaved);
+            wordWrap.IsEnabled = editor.mode == CommonEditor.TextMode.TXT;
         }   
 
         //================================UI click handlers==============================
@@ -37,11 +39,29 @@ namespace Notepad3
             if (sender == toggleEdit)
             {
                 editor.ToggleTextMode();
+
+                //disable word wrap menu on 
+                wordWrap.IsEnabled = editor.mode == CommonEditor.TextMode.TXT;
             }
             else if (sender == NewFile)
             {
                 editor.NewFile();
                 SetTitlebar("Untitled", editor.isSaved);
+            }
+            else if (sender == NewWindow)
+            {
+                ///launch another copy of the executable
+                try
+                {
+                    Process p = new Process();
+                    p.StartInfo.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    p.StartInfo.CreateNoWindow = true;
+                    p.Start();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Unable to launch process");
+                }
             }
             else if (sender == SaveFile)
             {
@@ -81,6 +101,17 @@ namespace Notepad3
             {
                 Close();
             }
+            else if (sender == Undo && !editor.Undo())
+            {
+                MessageBox.Show("There are no more commands to undo.", "Edit history"); 
+            }
+            else if (sender == Redo && !editor.Redo())
+            {   
+                MessageBox.Show("There are no more commands to redo.", "Edit history"); 
+            }
+            else if (sender == Cut) { editor.Cut(); }
+            else if (sender == Copy) { editor.Copy(); }
+            else if (sender == Paste) { editor.Paste(); }
         }
 
         /// <summary>
