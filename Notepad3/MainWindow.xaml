@@ -61,11 +61,32 @@
                 </Grid.RowDefinitions>
                 <ToolBarTray Grid.Row="0">
                     <ToolBar>
-                        <Button Content="Toolbar Button"/>
-                        <Label Content="Font"/>
                         <ComboBox>
-                            <ComboBoxItem IsSelected="True">Font 1</ComboBoxItem>
-                            <ComboBoxItem>Font 2</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">Helvetica</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True">Regular</ComboBoxItem>
+                        </ComboBox>
+                        
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True">12</ComboBoxItem>
+                        </ComboBox>
+                        <Separator />
+                        <Button Content="B"/>
+                        <Button Content="I"/>
+                        <Button Content="U"/>
+                        <Button Content="S"/>
+                        <Separator />
+                        <Button Content="L"/>
+                        <Button Content="C"/>
+                        <Button Content="R"/>
+                        <Button Content="J"/>
+                        <Separator />
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True">1.0</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True" >• -</ComboBoxItem>
                         </ComboBox>
                     </ToolBar>
                 </ToolBarTray>
