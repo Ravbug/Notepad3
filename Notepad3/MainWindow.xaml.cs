@@ -28,9 +28,20 @@ namespace Notepad3
             InitializeComponent();
             //configure the view
             editor = new CommonEditor(rtfView,txtView);
-            SetTitlebar(untitled_doc, editor.isSaved);
+
+            //handle being "opened with"
+            String[] arguments = Environment.GetCommandLineArgs();
+            if (arguments.Length > 1)
+            {
+                editor.Open(arguments[1]);
+                SetTitlebar(editor.document.Name, editor.isSaved);
+            }
+            else
+            {
+                SetTitlebar(untitled_doc, editor.isSaved);
+            }
             wordWrap.IsEnabled = editor.mode == CommonEditor.TextMode.TXT;
-        }   
+        }
 
         //================================UI click handlers==============================
 

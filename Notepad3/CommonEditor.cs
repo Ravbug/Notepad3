@@ -214,6 +214,11 @@ namespace Notepad3
                 {
                     document = new FileInfo(saveFileDialog.FileName);
                 }
+                else
+                {
+                    //not saving because the user cancels is not an error
+                    return true;
+                }
             }
 
             //attempt to write file, and return if it fails
@@ -289,24 +294,34 @@ namespace Notepad3
                 openFileDialog.RestoreDirectory = true;
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    FileInfo file = new FileInfo(openFileDialog.FileName);
-                    if (file.Extension.ToLower() == ".rtf")
-                    {
-                        if (mode != TextMode.RTF) { setTextMode(TextMode.RTF,false); }
-                        LoadRTF(openFileDialog.FileName.ToString());
-                    }
-                    else
-                    {
-                        if (mode != TextMode.TXT) { setTextMode(TextMode.TXT,false); }
-                        txtView.Text = File.ReadAllText(openFileDialog.FileName);
-                        isSaved = true;
-                    }
-                    document = file;
+                    Open(openFileDialog.FileName);
                     return true;
                 }
                 return false;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Opens a file given a path
+        /// </summary>
+        /// <param name="path">The path to the file</param>
+        public void Open(string path)
+        {
+            FileInfo file = new FileInfo(path);
+            if (file.Extension.ToLower() == ".rtf")
+            {
+                if (mode != TextMode.RTF) { setTextMode(TextMode.RTF, false); }
+                LoadRTF(path);
+            }
+            else
+            {
+                if (mode != TextMode.TXT) { setTextMode(TextMode.TXT, false); }
+                txtView.Text = File.ReadAllText(path);
+               
+            }
+            isSaved = true;
+            document = file;
         }
 
         /// <summary>

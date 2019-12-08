@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:Notepad3"
         mc:Ignorable="d"
         Height="450" Width="450"
@@ -59,30 +60,45 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ToolBarTray Grid.Row="0">
+                <ToolBarTray Grid.Row="0" IsLocked="True">
                     <ToolBar>
-                        <ComboBox>
-                            <ComboBoxItem IsSelected="True">Helvetica</ComboBoxItem>
+                        <ComboBox MinWidth="100" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" SelectedIndex="0">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" FontFamily="{Binding}" Height="20" Padding="3"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                         </ComboBox>
                         <ComboBox>
                             <ComboBoxItem IsSelected="True">Regular</ComboBoxItem>
                         </ComboBox>
                         
-                        <ComboBox>
+                        <ComboBox IsEditable="True">
                             <ComboBoxItem IsSelected="True">12</ComboBoxItem>
                         </ComboBox>
                         <Separator />
-                        <Button Content="B"/>
-                        <Button Content="I"/>
-                        <Button Content="U"/>
-                        <Button Content="S"/>
+                        <xctk:ColorPicker Name="ClrPcker_Background" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" MaxWidth="50"/>
                         <Separator />
-                        <Button Content="L"/>
-                        <Button Content="C"/>
-                        <Button Content="R"/>
-                        <Button Content="J"/>
+                        <ToggleButton Content="B" FontWeight="Bold"/>
+                        <ToggleButton Content="I" FontStyle="Italic"/>
+                        <ToggleButton>
+                            <TextBlock TextDecorations="Underline">U</TextBlock>
+                        </ToggleButton>
+                        <ToggleButton>
+                            <TextBlock TextDecorations="StrikeThrough">S</TextBlock>
+                        </ToggleButton>
                         <Separator />
-                        <ComboBox>
+                        <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Content="L" Background="Transparent" BorderBrush="Transparent"/>
+                        <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Content="C" Background="Transparent" BorderBrush="Transparent"/>
+                        <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Content="R" Background="Transparent" BorderBrush="Transparent"/>
+                        <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Content="J" Background="Transparent" BorderBrush="Transparent"/>
+                        <Separator />
+                        <ComboBox IsEditable="True">
                             <ComboBoxItem IsSelected="True">1.0</ComboBoxItem>
                         </ComboBox>
                         <ComboBox>
@@ -99,7 +115,7 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ToolBar Grid.Row="0">
+                <ToolBar ToolBarTray.IsLocked="True" Grid.Row="0">
                     <Button Content="Plaintext Button"/>
                 </ToolBar>
                 <TextBox Grid.Row="1" x:Name="txtView" TextChanged="keyhandler" TextWrapping="Wrap" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" IsEnabled="True"  FontFamily="Consolas" />
