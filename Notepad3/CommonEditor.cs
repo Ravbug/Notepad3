@@ -401,5 +401,38 @@ namespace Notepad3
             
         }
 
+        /* ==================== RTF Events =======================*/
+
+        /// <summary>
+        /// Change the font (RTF only)
+        /// </summary>
+        /// <param name="SelectedFont">Name of the font to change to</param>
+        public void SetFont(string SelectedFont)
+        {
+            if (rtfView.Selection.IsEmpty)
+            {
+                //rtfView.CurrentFontFamily = SelectedFont;
+            }
+            else
+            {
+                rtfView.Selection.ApplyPropertyValue(TextElement.FontFamilyProperty, SelectedFont);
+            }
+
+            rtfView.Focus();
+        }
+
+        /// <summary>
+        /// Set the font size (RTF only)
+        /// </summary>
+        /// <param name="size">New font size</param>
+        public void SetFontSize(double size)
+        {
+            TextSelection text = rtfView.Selection;
+            if (!text.IsEmpty)
+            {
+                text.ApplyPropertyValue(RichTextBox.FontSizeProperty, size);
+            }
+            rtfView.Focus();
+        }
     }
 }

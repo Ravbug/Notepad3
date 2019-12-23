@@ -142,6 +142,11 @@ namespace Notepad3
             editor.SetSavedState(false);
         } 
 
+        private void ClrPcker_Background_SelectedColorChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         /// <summary>
         /// Sets the titlebar based on different criteria
         /// </summary>
@@ -163,6 +168,32 @@ namespace Notepad3
         private void OnAbout(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Version: 0.0.1a\nDeveloper: Ravbug\n\nCopyright © 2018-" + DateTime.Now.Year.ToString(), "About Notepad3",MessageBoxButton.OK,MessageBoxImage.Information);
+        }
+
+        /* ==================== RTF Events ============================*/
+        private void Font_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (editor != null)
+            {
+                editor.SetFont(e.AddedItems[0].ToString());
+            }
+        }
+
+        private void FontSizeChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (editor != null && e.AddedItems.Count > 0)
+            {
+                string value = (e.AddedItems[0] as ComboBoxItem).Content.ToString();
+                editor.SetFontSize(double.Parse(value));
+            }
+        }
+
+        private void FontSizeChanged(object sender, EventArgs e)
+        {
+            if (editor != null)
+            {
+                editor.SetFontSize(double.Parse(FontSizeCombo.Text));
+            }
         }
     }
 }

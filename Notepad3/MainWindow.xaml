@@ -62,7 +62,7 @@
                 </Grid.RowDefinitions>
                 <ToolBarTray Grid.Row="0" IsLocked="True">
                     <ToolBar>
-                        <ComboBox MinWidth="100" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" SelectedIndex="0">
+                        <ComboBox MinWidth="100" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" SelectedIndex="0" SelectionChanged="Font_Changed">
                             <ComboBox.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel />
@@ -77,9 +77,10 @@
                         <ComboBox>
                             <ComboBoxItem IsSelected="True">Regular</ComboBoxItem>
                         </ComboBox>
-                        
-                        <ComboBox IsEditable="True">
+
+                        <ComboBox x:Name="FontSizeCombo" IsEditable="True" TextBoxBase.LostFocus="FontSizeChanged"  SelectionChanged="FontSizeChanged">
                             <ComboBoxItem IsSelected="True">12</ComboBoxItem>
+                            <ComboBoxItem>20</ComboBoxItem>
                         </ComboBox>
                         <Separator />
                         <xctk:ColorPicker Name="ClrPcker_Background" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" MaxWidth="50"/>
